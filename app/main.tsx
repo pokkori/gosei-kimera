@@ -226,17 +226,21 @@ export default function MainScreen() {
 
       {/* Bottom Navigation */}
       <View style={styles.nav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/arena')}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/arena')} accessibilityRole="button" accessibilityLabel="闘技場へ移動">
           <Text style={styles.navIcon}>{'\u2694\uFE0F'}</Text>
           <Text style={styles.navLabel}>{'\u95D8\u6280\u5834'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/codex')}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/codex')} accessibilityRole="button" accessibilityLabel="図鑑へ移動">
           <Text style={styles.navIcon}>{'\u{1F4D6}'}</Text>
           <Text style={styles.navLabel}>{'\u56F3\u9451'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/shop')}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/shop')} accessibilityRole="button" accessibilityLabel="ショップへ移動">
           <Text style={styles.navIcon}>{'\u{1F6D2}'}</Text>
           <Text style={styles.navLabel}>{'\u30B7\u30E7\u30C3\u30D7'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/legal')} accessibilityRole="button" accessibilityLabel="特定商取引法に基づく表記">
+          <Text style={styles.navIcon}>{'\u2139\uFE0F'}</Text>
+          <Text style={styles.navLabel}>{'\u6CD5\u7684\u60C5\u5831'}</Text>
         </TouchableOpacity>
       </View>
 
