@@ -35,7 +35,7 @@ export const PartSlot: React.FC<Props> = ({ slot, partDef, onPress, onLongPress,
     >
       {partDef ? (
         <>
-          <Text style={styles.emoji}>{partDef.emoji}</Text>
+          <IconSvg name={slotInfo.svgIcon} size={28} color={RARITY_COLOR[partDef.rarity]} />
           <Text style={styles.partName} numberOfLines={1}>{partDef.name}</Text>
           <Text style={styles.statBonus}>{slotInfo.stat}+{
             slot === 'head' ? Math.floor(partDef.stats.atk * 1.5) :
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  emoji: { fontSize: 28 },
   partName: { color: COLORS.text.primary, fontSize: 8, marginTop: 2, textAlign: 'center' },
   statBonus: { color: COLORS.ui.accentLight, fontSize: 10, fontWeight: '700', marginTop: 2 },
   label: { color: COLORS.text.muted, fontSize: 11, fontWeight: '700', marginTop: 2 },

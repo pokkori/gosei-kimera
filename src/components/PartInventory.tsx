@@ -16,9 +16,9 @@ type FilterType = 'all' | PartType;
 
 const FILTERS: { key: FilterType; label: string }[] = [
   { key: 'all', label: '\u5168\u3066' },
-  { key: 'head', label: '\u{1F5E1}\u982D' },
-  { key: 'body', label: '\u{1F6E1}\u80F4' },
-  { key: 'legs', label: '\u{1F9B6}\u811A' },
+  { key: 'head', label: '頭' },
+  { key: 'body', label: '胴' },
+  { key: 'legs', label: '脚' },
 ];
 
 export const PartInventory: React.FC<Props> = ({ inventory, selectedIds, onSelectPart, inventoryLimit }) => {

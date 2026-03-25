@@ -9,10 +9,10 @@ interface Props {
   onSelectPart?: (def: PartDef) => void;
 }
 
-const SPECIES_ORDER: { key: PartSpecies; icon: string; label: string }[] = [
-  { key: 'dragon', icon: '\u{1F409}', label: '\u30C9\u30E9\u30B4\u30F3\u7CFB' },
-  { key: 'phoenix', icon: '\u{1F985}', label: '\u30D5\u30A7\u30CB\u30C3\u30AF\u30B9\u7CFB' },
-  { key: 'kraken', icon: '\u{1F419}', label: '\u30AF\u30E9\u30FC\u30B1\u30F3\u7CFB' },
+const SPECIES_ORDER: { key: PartSpecies; label: string }[] = [
+  { key: 'dragon', label: 'ドラゴン系' },
+  { key: 'phoenix', label: 'フェニックス系' },
+  { key: 'kraken', label: 'クラーケン系' },
 ];
 
 const TYPES_ORDER = ['head', 'body', 'legs'] as const;
@@ -35,7 +35,7 @@ export const CodexGrid: React.FC<Props> = ({ discovered, onSelectPart }) => {
       {SPECIES_ORDER.map(species => (
         <View key={species.key} style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {species.icon} {species.label}
+            {species.label}
           </Text>
           {TYPES_ORDER.map(type => {
             const parts = PARTS_DATA.filter(
