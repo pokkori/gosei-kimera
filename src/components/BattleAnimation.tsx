@@ -5,9 +5,10 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withSequence,
+  withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import { BattleResult, BattleTurn, Stats } from '../types';
+import { BattleResult, Stats } from '../types';
 import { COLORS } from '../constants/colors';
 import { IconSvg } from './IconSvg';
 
@@ -33,17 +34,27 @@ export const BattleAnimation: React.FC<Props> = ({
   const [showResult, setShowResult] = useState(false);
   const [damageText, setDamageText] = useState<{ text: string; side: 'left' | 'right' } | null>(null);
 
+  // 攻撃移動: プレイヤー横移動 (パンチ感)
   const playerX = useSharedValue(0);
+  // 攻撃移動: 敵横移動
   const enemyX = useSharedValue(0);
   const playerHpWidth = useSharedValue(100);
   const enemyHpWidth = useSharedValue(100);
 
+  // ダメージシェイク用 SharedValue
+  const playerShakeX = useSharedValue(0);
+  const enemyShakeX = useSharedValue(0);
+
   const playerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: playerX.value }],
+    transform: [
+      { translateX: playerX.value + playerShakeX.value },
+    ],
   }));
 
   const enemyStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: enemyX.value }],
+    transform: [
+      { translateX: enemyX.value + enemyShakeX.value },
+    ],
   }));
 
   const playerHpStyle = useAnimatedStyle(() => ({
@@ -65,30 +76,48 @@ export const BattleAnimation: React.FC<Props> = ({
     setCurrentTurnIdx(idx);
 
     if (turn.attacker === 'player') {
+      // 攻撃者が前進: x+20→0 withSpring(パンチ感 damping:5, stiffness:600)
       playerX.value = withSequence(
-        withTiming(30, { duration: 100 }),
-        withTiming(0, { duration: 200 })
+        withSpring(20, { damping: 5, stiffness: 600 }),
+        withSpring(0, { damping: 8, stiffness: 300 }),
+      );
+      // 敵がダメージシェイク: -10→10→-8→8→0
+      enemyShakeX.value = withSequence(
+        withTiming(-10, { duration: 50 }),
+        withTiming(10, { duration: 60 }),
+        withTiming(-8, { duration: 55 }),
+        withTiming(8, { duration: 55 }),
+        withTiming(0, { duration: 60 }),
       );
       const newHp = turn.remainingHp;
       setEnemyHp(newHp);
       enemyHpWidth.value = withTiming(
         Math.max(0, (newHp / enemyStats.hp) * 100),
-        { duration: 300 }
+        { duration: 300 },
       );
       setDamageText({
         text: `${turn.damage}${turn.isCritical ? ' CRITICAL!' : ''}`,
         side: 'right',
       });
     } else {
+      // 敵が前進: x-20→0 withSpring
       enemyX.value = withSequence(
-        withTiming(-30, { duration: 100 }),
-        withTiming(0, { duration: 200 })
+        withSpring(-20, { damping: 5, stiffness: 600 }),
+        withSpring(0, { damping: 8, stiffness: 300 }),
+      );
+      // プレイヤーがダメージシェイク
+      playerShakeX.value = withSequence(
+        withTiming(-10, { duration: 50 }),
+        withTiming(10, { duration: 60 }),
+        withTiming(-8, { duration: 55 }),
+        withTiming(8, { duration: 55 }),
+        withTiming(0, { duration: 60 }),
       );
       const newHp = turn.remainingHp;
       setPlayerHp(newHp);
       playerHpWidth.value = withTiming(
         Math.max(0, (newHp / playerStats.hp) * 100),
-        { duration: 300 }
+        { duration: 300 },
       );
       setDamageText({
         text: `${turn.damage}${turn.isCritical ? ' CRITICAL!' : ''}`,
@@ -100,7 +129,7 @@ export const BattleAnimation: React.FC<Props> = ({
       setDamageText(null);
       processTurn(idx + 1);
     }, 500);
-  }, [result.turns, enemyStats.hp, playerStats.hp, onComplete, playerX, enemyX, playerHpWidth, enemyHpWidth]);
+  }, [result.turns, enemyStats.hp, playerStats.hp, onComplete, playerX, enemyX, playerHpWidth, enemyHpWidth, playerShakeX, enemyShakeX]);
 
   useEffect(() => {
     const timer = setTimeout(() => processTurn(0), 800);
