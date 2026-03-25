@@ -7,9 +7,12 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { COLORS } from '../constants/colors';
+import { IconSvg } from './IconSvg';
+
+type IconName = 'gift' | 'dice' | 'gem' | 'forbidden' | 'box' | 'coin' | 'shop' | 'star' | 'trophy';
 
 interface Props {
-  icon: string;
+  iconName: IconName;
   title: string;
   description: string;
   price: string;
@@ -17,7 +20,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const ShopItem: React.FC<Props> = ({ icon, title, description, price, onBuy, disabled }) => {
+export const ShopItem: React.FC<Props> = ({ iconName, title, description, price, onBuy, disabled }) => {
   const scale = useSharedValue(1);
 
   const handlePress = useCallback(() => {
@@ -36,7 +39,7 @@ export const ShopItem: React.FC<Props> = ({ icon, title, description, price, onB
 
   return (
     <View style={styles.card}>
-      <Text style={styles.icon}>{icon}</Text>
+      <IconSvg name={iconName} size={36} />
       <View style={styles.info}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.desc}>{description}</Text>
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg.surface, borderRadius: 12, padding: 12,
     gap: 12,
   },
-  icon: { fontSize: 32 },
   info: { flex: 1 },
   title: { color: COLORS.text.primary, fontSize: 14, fontWeight: '700' },
   desc: { color: COLORS.text.secondary, fontSize: 11, marginTop: 2 },

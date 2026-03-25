@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SlotType, PartDef, RARITY_COLOR } from '../types';
 import { COLORS } from '../constants/colors';
+import { IconSvg } from './IconSvg';
 
 interface Props {
   slot: SlotType;
@@ -11,10 +12,10 @@ interface Props {
   highlighted?: boolean;
 }
 
-const SLOT_LABELS: Record<SlotType, { icon: string; label: string; stat: string }> = {
-  head: { icon: '\u{1F5E1}', label: 'HEAD', stat: 'ATK' },
-  body: { icon: '\u{1F6E1}', label: 'BODY', stat: 'HP' },
-  legs: { icon: '\u{1F9B6}', label: 'LEGS', stat: 'SPD' },
+const SLOT_LABELS: Record<SlotType, { svgIcon: 'head' | 'body' | 'legs'; label: string; stat: string }> = {
+  head: { svgIcon: 'head', label: 'HEAD', stat: 'ATK' },
+  body: { svgIcon: 'body', label: 'BODY', stat: 'HP' },
+  legs: { svgIcon: 'legs', label: 'LEGS', stat: 'SPD' },
 };
 
 export const PartSlot: React.FC<Props> = ({ slot, partDef, onPress, onLongPress, highlighted }) => {
@@ -44,7 +45,7 @@ export const PartSlot: React.FC<Props> = ({ slot, partDef, onPress, onLongPress,
         </>
       ) : (
         <>
-          <Text style={styles.icon}>{slotInfo.icon}</Text>
+          <IconSvg name={slotInfo.svgIcon} size={28} color={COLORS.text.muted} />
           <Text style={styles.label}>{slotInfo.label}</Text>
           <Text style={styles.hint}>Tap to equip</Text>
         </>
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
   emoji: { fontSize: 28 },
   partName: { color: COLORS.text.primary, fontSize: 8, marginTop: 2, textAlign: 'center' },
   statBonus: { color: COLORS.ui.accentLight, fontSize: 10, fontWeight: '700', marginTop: 2 },
-  icon: { fontSize: 24 },
   label: { color: COLORS.text.muted, fontSize: 11, fontWeight: '700', marginTop: 2 },
   hint: { color: COLORS.text.muted, fontSize: 8, marginTop: 2 },
 });

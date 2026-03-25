@@ -20,7 +20,7 @@ export default function CodexScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={styles.backBtn}>{'\u2190 \u623B\u308B'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{'\u{1F4D6} \u90E8\u4F4D\u56F3\u9451'}</Text>
+        <Text style={styles.headerTitle}>{'\u90E8\u4F4D\u56F3\u9451'}</Text>
         <View style={{ width: 60 }} />
       </View>
 

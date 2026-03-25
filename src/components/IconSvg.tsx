@@ -18,7 +18,16 @@ type IconName =
   | 'dragon'
   | 'star'
   | 'shop'
-  | 'play';
+  | 'play'
+  | 'book'
+  | 'gift'
+  | 'gem'
+  | 'dice'
+  | 'forbidden'
+  | 'box'
+  | 'head'
+  | 'body'
+  | 'legs';
 
 interface IconSvgProps {
   name: IconName;
@@ -133,6 +142,79 @@ export const IconSvg: React.FC<IconSvgProps> = ({ name, size = 24, color = '#FFF
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="プレイ">
           <Path d="M8 5v14l11-7z" fill={color} />
+        </Svg>
+      );
+
+    case 'book':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="図鑑">
+          <Path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" fill={color} />
+        </Svg>
+      );
+
+    case 'gift':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="ギフト">
+          <Path d="M20 6h-2.18c.07-.31.18-.61.18-.94 0-2.21-1.79-4-4-4-1.05 0-2 .39-2.74 1.03L10 3.4 8.74 2.09C8 1.39 7.05 1 6 1 3.79 1 2 2.79 2 5c0 .33.11.63.18.94H0v4h1v11h22V10h1V6h-4zm-8-3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zM6 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm15 15H3v-9h8v2h2v-2h8v9zm0-11H3V8h8v2h2V8h8v2z" fill="#4CAF50" />
+        </Svg>
+      );
+
+    case 'gem':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="宝石">
+          <Path d="M5 7l-2 5 9 9 9-9-2-5H5zm7 10.5L5.5 12H18.5L12 17.5z" fill="#64B5F6" />
+          <Path d="M8 7l-1 5h10l-1-5H8z" fill="#90CAF9" />
+        </Svg>
+      );
+
+    case 'dice':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="ガチャ">
+          <Rect x="2" y="2" width="20" height="20" rx="3" fill={color} />
+          <Circle cx="8" cy="8" r="1.5" fill="#1A1A3E" />
+          <Circle cx="16" cy="8" r="1.5" fill="#1A1A3E" />
+          <Circle cx="12" cy="12" r="1.5" fill="#1A1A3E" />
+          <Circle cx="8" cy="16" r="1.5" fill="#1A1A3E" />
+          <Circle cx="16" cy="16" r="1.5" fill="#1A1A3E" />
+        </Svg>
+      );
+
+    case 'forbidden':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="利用不可">
+          <Circle cx="12" cy="12" r="10" fill="none" stroke="#FF5252" strokeWidth="2" />
+          <Path d="M4.93 4.93l14.14 14.14" stroke="#FF5252" strokeWidth="2" />
+        </Svg>
+      );
+
+    case 'box':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="パック">
+          <Path d="M20 2H4L2 7v2h1v13h18V9h1V7L20 2zm-8 18H5V9h7v11zm7 0h-5V9h5v11zM4.08 7L5 4h14l.92 3H4.08z" fill={color} />
+        </Svg>
+      );
+
+    case 'head':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="頭部スロット">
+          <Path d="M12 3C8.13 3 5 6.13 5 10v3h2v2h2v2h6v-2h2v-2h2v-3c0-3.87-3.13-7-7-7z" fill={color} />
+          <Circle cx="9" cy="10" r="1" fill="#1A1A3E" />
+          <Circle cx="15" cy="10" r="1" fill="#1A1A3E" />
+        </Svg>
+      );
+
+    case 'body':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="胴体スロット">
+          <Path d="M17 8H7l-2 4v3h2v6h10v-6h2v-3L17 8z" fill={color} />
+          <Path d="M15 5H9c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z" fill={color} />
+        </Svg>
+      );
+
+    case 'legs':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" accessibilityLabel="脚部スロット">
+          <Path d="M9 4H7v13l3 3v-7h4v7l3-3V4h-2v7h-6V4z" fill={color} />
         </Svg>
       );
 

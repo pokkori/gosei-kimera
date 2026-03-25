@@ -8,6 +8,7 @@ import { generateGachaPart } from '../src/engine/drop';
 import { getPartDef } from '../src/data/parts';
 import { COLORS } from '../src/constants/colors';
 import { ShopItem } from '../src/components/ShopItem';
+import { IconSvg } from '../src/components/IconSvg';
 
 export default function ShopScreen() {
   const router = useRouter();
@@ -77,44 +78,50 @@ export default function ShopScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={styles.backBtn}>{'\u2190 \u623B\u308B'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{'\u{1F6D2} \u30B7\u30E7\u30C3\u30D7'}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <IconSvg name="shop" size={20} color={COLORS.text.primary} />
+          <Text style={styles.headerTitle}>{'\u30B7\u30E7\u30C3\u30D7'}</Text>
+        </View>
         <View style={{ width: 60 }} />
       </View>
 
-      <Text style={styles.coins}>{'\u{1F4B0} '}{store.coins} \u30B3\u30A4\u30F3</Text>
+      <View style={styles.coinsRow}>
+        <IconSvg name="coin" size={18} />
+        <Text style={styles.coins}>{store.coins} \u30B3\u30A4\u30F3</Text>
+      </View>
 
       <ScrollView contentContainerStyle={styles.list}>
-        <Text style={styles.sectionTitle}>{'\u{1F381} \u7121\u6599'}</Text>
+        <Text style={styles.sectionTitle}>{'\u7121\u6599'}</Text>
         <ShopItem
-          icon={'\u{1F381}'}
+          iconName="gift"
           title={'\u30C7\u30A4\u30EA\u30FC\u30DC\u30FC\u30CA\u30B9'}
           description={`\u30ED\u30B0\u30A4\u30F3\u30DC\u30FC\u30CA\u30B9\u3067\u90E8\u4F4D\u3092\u30B2\u30C3\u30C8\uFF01 (\u9023\u7D9A${store.dailyStreak}\u65E5)`}
-          price={dailyClaimed ? '\u53D7\u53D6\u6E08\u307F' : '\u{1F381} \u53D7\u3051\u53D6\u308B'}
+          price={dailyClaimed ? '\u53D7\u53D6\u6E08\u307F' : '\u53D7\u3051\u53D6\u308B'}
           onBuy={handleDailyReward}
           disabled={dailyClaimed}
         />
 
-        <Text style={styles.sectionTitle}>{'\u{1F4B0} \u30B3\u30A4\u30F3\u3067\u8CFC\u5165'}</Text>
+        <Text style={styles.sectionTitle}>{'\u30B3\u30A4\u30F3\u3067\u8CFC\u5165'}</Text>
         <ShopItem
-          icon={'\u{1F3B2}'}
+          iconName="dice"
           title={'\u30E9\u30F3\u30C0\u30E0\u90E8\u4F4D\u30AC\u30C1\u30E3'}
           description={'Common70% / Uncommon25% / Rare5%'}
-          price={`\u{1F4B0}${GAME_CONFIG.GACHA_NORMAL_COST}`}
+          price={`${GAME_CONFIG.GACHA_NORMAL_COST}\u30B3\u30A4\u30F3`}
           onBuy={handleNormalGacha}
           disabled={store.coins < GAME_CONFIG.GACHA_NORMAL_COST}
         />
         <ShopItem
-          icon={'\u{1F48E}'}
+          iconName="gem"
           title={'\u30D7\u30EC\u30DF\u30A2\u30E0\u30AC\u30C1\u30E3'}
           description={'Uncommon40% / Rare35% / Epic20% / Legendary5%'}
-          price={`\u{1F4B0}${GAME_CONFIG.GACHA_PREMIUM_COST}`}
+          price={`${GAME_CONFIG.GACHA_PREMIUM_COST}\u30B3\u30A4\u30F3`}
           onBuy={handlePremiumGacha}
           disabled={store.coins < GAME_CONFIG.GACHA_PREMIUM_COST}
         />
 
-        <Text style={styles.sectionTitle}>{'\u{1F48E} \u30D7\u30EC\u30DF\u30A2\u30E0 (\u6E96\u5099\u4E2D)'}</Text>
+        <Text style={styles.sectionTitle}>{'\u30D7\u30EC\u30DF\u30A2\u30E0 (\u6E96\u5099\u4E2D)'}</Text>
         <ShopItem
-          icon={'\u{1F6AB}'}
+          iconName="forbidden"
           title={'\u5E83\u544A\u9664\u53BB\u30D1\u30C3\u30AF'}
           description={'\u30D0\u30CA\u30FC\u30FB\u30A4\u30F3\u30BF\u30FC\u30B9\u30C6\u524A\u9664'}
           price={'\uFFE5480'}
@@ -122,7 +129,7 @@ export default function ShopScreen() {
           disabled
         />
         <ShopItem
-          icon={'\u{1F4E6}'}
+          iconName="box"
           title={'\u30B9\u30BF\u30FC\u30BF\u30FC\u30D1\u30C3\u30AF'}
           description={'Rare\u90E8\u4F4D3\u500B+1000\u30B3\u30A4\u30F3'}
           price={'\uFFE5980'}
@@ -142,7 +149,8 @@ const styles = StyleSheet.create({
   },
   backBtn: { color: COLORS.ui.accentLight, fontSize: 16 },
   headerTitle: { color: COLORS.text.primary, fontSize: 18, fontWeight: '700' },
-  coins: { color: COLORS.ui.warning, fontSize: 18, fontWeight: '700', textAlign: 'center', marginBottom: 8 },
+  coinsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8 },
+  coins: { color: COLORS.ui.warning, fontSize: 18, fontWeight: '700' },
   list: { padding: 16, gap: 10 },
   sectionTitle: { color: COLORS.text.secondary, fontSize: 14, fontWeight: '700', marginTop: 8 },
 });
