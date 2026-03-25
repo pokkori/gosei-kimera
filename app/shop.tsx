@@ -28,7 +28,7 @@ export default function ShopScreen() {
     const def = getPartDef(part.defId);
     Alert.alert(
       '\u30AC\u30C1\u30E3\u7D50\u679C',
-      `${def?.emoji} ${def?.name}\u3092\u5165\u624B\uFF01`
+      `${def?.name}\u3092\u5165\u624B\uFF01`
     );
     store.saveGame();
   };
@@ -48,7 +48,7 @@ export default function ShopScreen() {
     const def = getPartDef(part.defId);
     Alert.alert(
       '\u30D7\u30EC\u30DF\u30A2\u30E0\u30AC\u30C1\u30E3\u7D50\u679C',
-      `${def?.emoji} ${def?.name}\u3092\u5165\u624B\uFF01`
+      `${def?.name}\u3092\u5165\u624B\uFF01`
     );
     store.saveGame();
   };
@@ -63,7 +63,7 @@ export default function ShopScreen() {
     const def = getPartDef(part.defId);
     Alert.alert(
       '\u30C7\u30A4\u30EA\u30FC\u30DC\u30FC\u30CA\u30B9',
-      `${def?.emoji} ${def?.name}\u3092\u5165\u624B\uFF01\n\u{1F4B0} +${store.dailyStreak * 10}\u30B3\u30A4\u30F3`
+      `${def?.name}\u3092\u5165\u624B\uFF01\n+${store.dailyStreak * 10}\u30B3\u30A4\u30F3`
     );
     store.saveGame();
   };

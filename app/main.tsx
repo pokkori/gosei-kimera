@@ -104,7 +104,7 @@ export default function MainScreen() {
       const def = getPartDef(result.defId);
       Alert.alert(
         '\u5408\u6210\u6210\u529F\uFF01',
-        `${def?.emoji} ${def?.name} \u304C\u751F\u307E\u308C\u305F\uFF01`
+        `${def?.name} \u304C\u751F\u307E\u308C\u305F\uFF01`
       );
       store.saveGame();
     }
@@ -171,9 +171,9 @@ export default function MainScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerItem}>{'\u{1F4B0}'}{store.coins}</Text>
-        <Text style={styles.headerItem}>{'\u2694\uFE0F'}Rank{store.arenaRank}</Text>
-        <Text style={styles.headerItem}>{'\u{1F4CA}'}{store.record.wins}W</Text>
+        <Text style={styles.headerItem}>コイン:{store.coins}</Text>
+        <Text style={styles.headerItem}>Rank{store.arenaRank}</Text>
+        <Text style={styles.headerItem}>{store.record.wins}W</Text>
       </View>
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollInner}>
@@ -182,7 +182,7 @@ export default function MainScreen() {
           <ChimeraPreview headDef={headDef ?? null} bodyDef={bodyDef ?? null} legsDef={legsDef ?? null} size="medium" />
           <Text style={styles.chimeraName}>{store.chimera.name}</Text>
           <StatsBar stats={store.chimera.totalStats} compact />
-          <Text style={styles.power}>{'\u26A1'}Power: {store.chimera.power}</Text>
+          <Text style={styles.power}>Power: {store.chimera.power}</Text>
         </TouchableOpacity>
 
         {/* Equipment Slots */}
@@ -195,7 +195,7 @@ export default function MainScreen() {
         {showEquipModal && (
           <View style={styles.equipHint}>
             <Text style={styles.equipHintText}>
-              {'\u{1F447}'} {'\u88C5\u5099\u3059\u308B\u90E8\u4F4D\u3092\u30BF\u30C3\u30D7\u3057\u3066\u304F\u3060\u3055\u3044'}
+              {'\u88C5\u5099\u3059\u308B\u90E8\u4F4D\u3092\u30BF\u30C3\u30D7\u3057\u3066\u304F\u3060\u3055\u3044'}
             </Text>
             <TouchableOpacity onPress={() => setShowEquipModal(null)}>
               <Text style={styles.cancelText}>{'\u30AD\u30E3\u30F3\u30BB\u30EB'}</Text>
@@ -227,19 +227,19 @@ export default function MainScreen() {
       {/* Bottom Navigation */}
       <View style={styles.nav}>
         <TouchableOpacity style={styles.navButton} onPress={() => router.push('/arena')} accessibilityRole="button" accessibilityLabel="闘技場へ移動">
-          <Text style={styles.navIcon}>{'\u2694\uFE0F'}</Text>
+          <Text style={styles.navIcon}>{'\u6226'}</Text>
           <Text style={styles.navLabel}>{'\u95D8\u6280\u5834'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={() => router.push('/codex')} accessibilityRole="button" accessibilityLabel="図鑑へ移動">
-          <Text style={styles.navIcon}>{'\u{1F4D6}'}</Text>
+          <Text style={styles.navIcon}>{'\u56F3'}</Text>
           <Text style={styles.navLabel}>{'\u56F3\u9451'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={() => router.push('/shop')} accessibilityRole="button" accessibilityLabel="ショップへ移動">
-          <Text style={styles.navIcon}>{'\u{1F6D2}'}</Text>
+          <Text style={styles.navIcon}>{'\u5E97'}</Text>
           <Text style={styles.navLabel}>{'\u30B7\u30E7\u30C3\u30D7'}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={() => router.push('/legal')} accessibilityRole="button" accessibilityLabel="特定商取引法に基づく表記">
-          <Text style={styles.navIcon}>{'\u2139\uFE0F'}</Text>
+          <Text style={styles.navIcon}>{'\u6CD5'}</Text>
           <Text style={styles.navLabel}>{'\u6CD5\u7684\u60C5\u5831'}</Text>
         </TouchableOpacity>
       </View>
@@ -274,7 +274,6 @@ export default function MainScreen() {
           <View style={styles.modalCard}>
             {detailDef && showDetailModal && (
               <>
-                <Text style={styles.detailEmoji}>{detailDef.emoji}</Text>
                 <Text style={styles.detailName}>{detailDef.name}</Text>
                 <RarityBadge rarity={detailDef.rarity} />
                 <StatsBar stats={detailDef.stats} />

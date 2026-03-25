@@ -31,7 +31,6 @@ export default function CodexScreen() {
           <View style={styles.modalCard}>
             {selectedDef && (
               <>
-                <Text style={styles.emoji}>{selectedDef.emoji}</Text>
                 <Text style={styles.name}>{selectedDef.name}</Text>
                 <RarityBadge rarity={selectedDef.rarity} />
                 <StatsBar stats={selectedDef.stats} />
