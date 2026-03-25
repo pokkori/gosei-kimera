@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   withDelay,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { BattleResult, PartInstance } from '../types';
 import { getPartDef } from '../data/parts';
 import { COLORS } from '../constants/colors';
@@ -40,6 +41,15 @@ function ResultCardContent({ result, onClose }: { result: BattleResult; onClose:
   const buttonOpacity = useSharedValue(0);
 
   useEffect(() => {
+    // 勝敗モーダル表示時のハプティクス
+    if (result.winner === 'player') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+    } else if (result.winner === 'enemy') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
+    } else {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
+    }
+
     if (isWin) {
       titleScale.value = withSpring(1.2, { damping: 8, stiffness: 300 }, (finished) => {
         if (finished) {

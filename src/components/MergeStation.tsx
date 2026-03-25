@@ -7,10 +7,12 @@ import Animated, {
   withTiming,
   withSequence,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { PartInstance } from '../types';
 import { COLORS } from '../constants/colors';
 import { canMerge } from '../engine/merge';
 import { getPartDef } from '../data/parts';
+import { playSE } from '../utils/audio';
 
 interface Props {
   onMerge: (id1: string, id2: string) => void;
@@ -121,6 +123,9 @@ export const MergeStation: React.FC<Props> = ({ onMerge, slot1, slot2, onClearSl
 
   const handleMerge = useCallback(() => {
     if (slot1 && slot2 && canDoMerge) {
+      // 合成成功: SE + ハプティクス（成功通知）
+      playSE('merge').catch(() => {});
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
       // 合成ボタン押下アニメーション
       mergeButtonScale.value = withSequence(
         withSpring(0.9, { damping: 10, stiffness: 400 }),
@@ -131,6 +136,8 @@ export const MergeStation: React.FC<Props> = ({ onMerge, slot1, slot2, onClearSl
       setShowCelebration(true);
       setTimeout(() => setShowCelebration(false), 900);
     } else if (def1 && def2) {
+      // 合成不可: 軽い警告ハプティクス
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
       Alert.alert(
         '合成不可',
         '同じ種類・レア度の部位が必要！',

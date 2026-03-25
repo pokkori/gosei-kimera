@@ -8,9 +8,11 @@ import Animated, {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { BattleResult, Stats } from '../types';
 import { COLORS } from '../constants/colors';
 import { IconSvg } from './IconSvg';
+import { playSE } from '../utils/audio';
 
 interface Props {
   playerName: string;
@@ -67,6 +69,16 @@ export const BattleAnimation: React.FC<Props> = ({
 
   const processTurn = useCallback((idx: number) => {
     if (idx >= result.turns.length) {
+      // 勝敗確定: SE + ハプティクス
+      if (result.winner === 'player') {
+        playSE('victory').catch(() => {});
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      } else if (result.winner === 'enemy') {
+        playSE('defeat').catch(() => {});
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
+      } else {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
+      }
       setShowResult(true);
       setTimeout(onComplete, 2000);
       return;
@@ -76,6 +88,13 @@ export const BattleAnimation: React.FC<Props> = ({
     setCurrentTurnIdx(idx);
 
     if (turn.attacker === 'player') {
+      // 攻撃SE + ハプティクス
+      playSE('attack').catch(() => {});
+      if (turn.isCritical) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
+      } else {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+      }
       // 攻撃者が前進: x+20→0 withSpring(パンチ感 damping:5, stiffness:600)
       playerX.value = withSequence(
         withSpring(20, { damping: 5, stiffness: 600 }),
@@ -100,6 +119,9 @@ export const BattleAnimation: React.FC<Props> = ({
         side: 'right',
       });
     } else {
+      // 敵の攻撃: SE + ハプティクス（受けるダメージ）
+      playSE('attack').catch(() => {});
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
       // 敵が前進: x-20→0 withSpring
       enemyX.value = withSequence(
         withSpring(-20, { damping: 5, stiffness: 600 }),
