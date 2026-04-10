@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useGameStore } from '../src/store/gameStore';
 import { ENEMY_DATA } from '../src/data/enemies';
 import { EnemyDef, BattleResult } from '../src/types';
@@ -9,6 +11,7 @@ import { COLORS } from '../src/constants/colors';
 import { BattleAnimation } from '../src/components/BattleAnimation';
 import { BattleResultModal } from '../src/components/BattleResultModal';
 import { getPartDef } from '../src/data/parts';
+import { IconSvg } from '../src/components/IconSvg';
 
 type Phase = 'select' | 'battle' | 'result';
 
@@ -57,27 +60,15 @@ export default function ArenaScreen() {
     setBattleResult(null);
   };
 
-  // Build player emoji from equipped parts
-  const headDef = store.chimera.slots.head
-    ? getPartDef(store.inventory.find(p => p.instanceId === store.chimera.slots.head)?.defId ?? '')
-    : null;
-  const bodyDef = store.chimera.slots.body
-    ? getPartDef(store.inventory.find(p => p.instanceId === store.chimera.slots.body)?.defId ?? '')
-    : null;
-  const legsDef = store.chimera.slots.legs
-    ? getPartDef(store.inventory.find(p => p.instanceId === store.chimera.slots.legs)?.defId ?? '')
-    : null;
-  const playerEmoji = `${headDef?.emoji ?? '?'}${bodyDef?.emoji ?? '?'}${legsDef?.emoji ?? '?'}`;
-
   if (phase === 'battle' && selectedEnemy && battleResult) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <BattleAnimation
           playerName={store.chimera.name}
-          playerEmoji={playerEmoji}
+          playerEmoji=""
           playerStats={store.chimera.totalStats}
           enemyName={selectedEnemy.name}
-          enemyEmoji={selectedEnemy.emoji}
+          enemyEmoji=""
           enemyStats={selectedEnemy.totalStats}
           result={battleResult}
           onComplete={handleBattleComplete}
@@ -87,20 +78,28 @@ export default function ArenaScreen() {
   }
 
   return (
+    <LinearGradient colors={['#0F0F1A', '#1A0A2E', '#2D1B4E']} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+      <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
+        <Pressable onPress={() => router.back()}
+          accessibilityLabel="戻る"
+          accessibilityRole="button"
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
           <Text style={styles.backBtn}>{'\u2190 \u623B\u308B'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{'\u2694\uFE0F \u95D8\u6280\u5834'}</Text>
+        </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <IconSvg name="battle" size={20} />
+          <Text style={styles.headerTitle}>{'\u95D8\u6280\u5834'}</Text>
+        </View>
         <View style={{ width: 60 }} />
-      </View>
+      </Animated.View>
 
       {store.chimera.power <= 0 && (
         <View style={styles.warningBox}>
           <Text style={styles.warningText}>
-            {'\u26A0\uFE0F \u90E8\u4F4D\u3092\u88C5\u5099\u3057\u3066\u304B\u3089\u6311\u6226\u3057\u3088\u3046\uFF01'}
+            {'\u90E8\u4F4D\u3092\u88C5\u5099\u3057\u3066\u304B\u3089\u6311\u6226\u3057\u3088\u3046\uFF01'}
           </Text>
         </View>
       )}
@@ -115,21 +114,29 @@ export default function ArenaScreen() {
           const power = item.totalStats.atk + item.totalStats.hp + item.totalStats.spd;
           return (
             <View style={styles.enemyCard}>
-              <Text style={styles.enemyEmoji}>{item.emoji}</Text>
+              <View style={styles.enemyIconBox}>
+                <IconSvg name="dragon" size={36} />
+              </View>
               <View style={styles.enemyInfo}>
                 <Text style={styles.enemyName}>{item.name}</Text>
                 <Text style={styles.enemyStats}>
                   ATK:{item.totalStats.atk} HP:{item.totalStats.hp} SPD:{item.totalStats.spd}
                 </Text>
-                <Text style={styles.enemyPower}>{'\u26A1'}Power: {power}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                  <IconSvg name="fire" size={14} />
+                  <Text style={styles.enemyPower}>Power: {power}</Text>
+                </View>
               </View>
-              <TouchableOpacity
+              <Pressable
                 style={[styles.challengeBtn, store.chimera.power <= 0 && styles.challengeBtnDisabled]}
                 onPress={() => handleChallenge(item)}
                 disabled={store.chimera.power <= 0}
               >
-                <Text style={styles.challengeText}>{'\u2694\uFE0F \u6311\u6226'}</Text>
-              </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                  <IconSvg name="sword" size={16} />
+                  <Text style={styles.challengeText}>{'\u6311\u6226'}</Text>
+                </View>
+              </Pressable>
             </View>
           );
         }}
@@ -144,17 +151,18 @@ export default function ArenaScreen() {
         />
       )}
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg.primary },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,
   },
   backBtn: { color: COLORS.ui.accentLight, fontSize: 16 },
-  headerTitle: { color: COLORS.text.primary, fontSize: 18, fontWeight: '700' },
+  headerTitle: { color: '#F1F5F9', fontSize: 18, fontWeight: '700', textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
   warningBox: {
     backgroundColor: COLORS.ui.error + '33', margin: 16, padding: 12, borderRadius: 8,
   },
@@ -162,16 +170,17 @@ const styles = StyleSheet.create({
   rankText: { color: COLORS.ui.warning, fontSize: 16, fontWeight: '700', textAlign: 'center', marginVertical: 8 },
   list: { padding: 16, gap: 12 },
   enemyCard: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.bg.surface,
-    borderRadius: 12, padding: 12, gap: 12,
+    flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 16, padding: 12, gap: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
   },
-  enemyEmoji: { fontSize: 36 },
+  enemyIconBox: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   enemyInfo: { flex: 1 },
   enemyName: { color: COLORS.text.primary, fontSize: 16, fontWeight: '700' },
   enemyStats: { color: COLORS.text.secondary, fontSize: 11, marginTop: 2 },
   enemyPower: { color: COLORS.ui.warning, fontSize: 12, fontWeight: '700', marginTop: 2 },
   challengeBtn: {
     backgroundColor: COLORS.ui.accent, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10,
+    shadowColor: '#7C4DFF', shadowOpacity: 0.5, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 4, minHeight: 44, justifyContent: 'center',
   },
   challengeBtnDisabled: { opacity: 0.4 },
   challengeText: { color: COLORS.text.primary, fontSize: 14, fontWeight: '700' },

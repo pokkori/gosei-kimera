@@ -12,6 +12,9 @@ import { PartInstance } from '../types';
 import { COLORS } from '../constants/colors';
 import { canMerge } from '../engine/merge';
 import { getPartDef } from '../data/parts';
+import { IconSvg } from './IconSvg';
+
+const PART_TYPE_ICON = { head: 'head', body: 'body', legs: 'legs' } as const;
 import { playSE } from '../utils/audio';
 
 interface Props {
@@ -156,7 +159,7 @@ export const MergeStation: React.FC<Props> = ({ onMerge, slot1, slot2, onClearSl
           accessibilityLabel={def1 ? `スロット1: ${def1.name}。タップで解除` : 'スロット1: 空き'}
         >
           {def1 ? (
-            <Text style={styles.slotEmoji}>{def1.emoji}</Text>
+            <IconSvg name={PART_TYPE_ICON[def1.type] ?? 'dragon'} size={28} />
           ) : (
             <Text style={styles.slotPlaceholder}>1</Text>
           )}
@@ -171,7 +174,7 @@ export const MergeStation: React.FC<Props> = ({ onMerge, slot1, slot2, onClearSl
           accessibilityLabel={def2 ? `スロット2: ${def2.name}。タップで解除` : 'スロット2: 空き'}
         >
           {def2 ? (
-            <Text style={styles.slotEmoji}>{def2.emoji}</Text>
+            <IconSvg name={PART_TYPE_ICON[def2.type] ?? 'dragon'} size={28} />
           ) : (
             <Text style={styles.slotPlaceholder}>2</Text>
           )}

@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useGameStore } from '../src/store/gameStore';
 import { GAME_CONFIG } from '../src/constants/config';
 import { generateGachaPart } from '../src/engine/drop';
@@ -73,17 +75,22 @@ export default function ShopScreen() {
   const dailyClaimed = store.lastDailyRewardDate === todayStr;
 
   return (
+    <LinearGradient colors={['#0F0F1A', '#1A0A2E', '#2D1B4E']} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+      <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
+        <Pressable onPress={() => router.back()}
+          accessibilityLabel="戻る"
+          accessibilityRole="button"
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
           <Text style={styles.backBtn}>{'\u2190 \u623B\u308B'}</Text>
-        </TouchableOpacity>
+        </Pressable>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <IconSvg name="shop" size={20} color={COLORS.text.primary} />
           <Text style={styles.headerTitle}>{'\u30B7\u30E7\u30C3\u30D7'}</Text>
         </View>
         <View style={{ width: 60 }} />
-      </View>
+      </Animated.View>
 
       <View style={styles.coinsRow}>
         <IconSvg name="coin" size={18} />
@@ -138,17 +145,18 @@ export default function ShopScreen() {
         />
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg.primary },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,
   },
   backBtn: { color: COLORS.ui.accentLight, fontSize: 16 },
-  headerTitle: { color: COLORS.text.primary, fontSize: 18, fontWeight: '700' },
+  headerTitle: { color: '#F1F5F9', fontSize: 18, fontWeight: '700', textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
   coinsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8 },
   coins: { color: COLORS.ui.warning, fontSize: 18, fontWeight: '700' },
   list: { padding: 16, gap: 10 },

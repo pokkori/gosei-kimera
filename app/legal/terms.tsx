@@ -1,24 +1,26 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TermsScreen() {
   const router = useRouter();
   return (
+    <LinearGradient colors={['#0F0F1A', '#1A0A2E', '#2D1B4E']} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scroll}
         accessibilityLabel="利用規約"
       >
-        <TouchableOpacity
+        <Pressable
           onPress={() => router.back()}
           style={styles.back}
           accessibilityRole="button"
           accessibilityLabel="戻る"
         >
           <Text style={styles.backText}>← 戻る</Text>
-        </TouchableOpacity>
+        </Pressable>
         <Text style={styles.title} accessibilityRole="header">
           利用規約
         </Text>
@@ -47,6 +49,14 @@ export default function TermsScreen() {
             heading: '第6条（準拠法・管轄裁判所）',
             body: '本規約は日本法に準拠します。本規約に関して紛争が生じた場合、開発者の所在地を管轄する裁判所を専属合意管轄とします。',
           },
+          {
+            heading: '第7条（仮想通貨の有効期限）',
+            body: '本アプリ内で取得したコイン・ジェム等の仮想通貨は、取得日から180日間有効です。有効期限を過ぎた仮想通貨は自動的に失効し、返金はいたしません。',
+          },
+          {
+            heading: '第8条（未成年者の利用）',
+            body: '未成年者が本アプリを利用する場合は、保護者の同意を得た上でご利用ください。未成年者による課金は、保護者の同意があるものとみなします。15歳以下の月額課金上限は5,000円、16〜17歳は10,000円を推奨します。',
+          },
         ].map(({ heading, body }) => (
           <View key={heading} style={styles.section}>
             <Text style={styles.sectionTitle}>{heading}</Text>
@@ -56,15 +66,16 @@ export default function TermsScreen() {
         <Text style={styles.date}>最終更新: 2026年1月</Text>
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0D0D1A' },
+  container: { flex: 1 },
   scroll: { flex: 1, padding: 16 },
   back: { marginBottom: 16, minHeight: 44, justifyContent: 'center' },
   backText: { color: '#2DD4BF', fontSize: 16 },
-  title: { color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', marginBottom: 24 },
+  title: { color: '#F1F5F9', fontSize: 20, fontWeight: 'bold', marginBottom: 24, textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
   section: { marginBottom: 20 },
   sectionTitle: { color: '#2DD4BF', fontSize: 15, fontWeight: '700', marginBottom: 8 },
   body: { color: '#D1D5DB', fontSize: 14, lineHeight: 22 },

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Pressable, Modal, Share, Linking } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,6 +13,7 @@ import { getPartDef } from '../data/parts';
 import { COLORS } from '../constants/colors';
 import { RarityBadge } from './RarityBadge';
 import { IconSvg } from './IconSvg';
+import { useRewardedAd } from '../hooks/useRewardedAd';
 
 interface Props {
   visible: boolean;
@@ -24,6 +25,25 @@ interface Props {
 function ResultCardContent({ result, onClose }: { result: BattleResult; onClose: () => void }) {
   const rewardDef = result.rewardPart ? getPartDef(result.rewardPart.defId) : null;
   const isWin = result.winner === 'player';
+  const { isLoaded: adLoaded, showAd } = useRewardedAd();
+
+  const handleShare = useCallback(async () => {
+    const r = isWin ? '勝利' : result.winner === 'enemy' ? '敗北' : '引き分け';
+    const msg = `合成キメラ バトル${r}！ +${result.coinsEarned}コイン獲得 #合成キメラ`;
+    try { await Share.share({ message: msg }); } catch (_) {}
+  }, [isWin, result]);
+
+  const handleShareX = useCallback(async () => {
+    const r = isWin ? '勝利' : result.winner === 'enemy' ? '敗北' : '引き分け';
+    const msg = encodeURIComponent(`合成キメラ バトル${r}！ +${result.coinsEarned}コイン獲得 #合成キメラ`);
+    await Linking.openURL(`https://twitter.com/intent/tweet?text=${msg}`);
+  }, [isWin, result]);
+
+  const handleWatchAd = useCallback(() => {
+    showAd(() => {
+      // Bonus coins from ad
+    });
+  }, [showAd]);
 
   const resultIcon =
     result.winner === 'player' ? 'party' :
@@ -100,8 +120,23 @@ function ResultCardContent({ result, onClose }: { result: BattleResult; onClose:
         </View>
       )}
 
+      {/* Share & Ad */}
+      <View style={styles.shareRow}>
+        <Pressable style={styles.shareBtn} onPress={handleShare} accessibilityRole="button" accessibilityLabel="結果をシェアする">
+          <Text style={styles.shareBtnText}>シェア</Text>
+        </Pressable>
+        <Pressable style={styles.xBtn} onPress={handleShareX} accessibilityRole="button" accessibilityLabel="Xに投稿する">
+          <Text style={styles.xBtnText}>Xに投稿</Text>
+        </Pressable>
+        {adLoaded && (
+          <Pressable style={styles.adBtn} onPress={handleWatchAd} accessibilityRole="button" accessibilityLabel="広告を見てボーナスを獲得する">
+            <Text style={styles.adBtnText}>広告でボーナス</Text>
+          </Pressable>
+        )}
+      </View>
+
       <Animated.View style={buttonStyle}>
-        <TouchableOpacity
+        <Pressable
           style={styles.button}
           onPress={onClose}
           accessibilityLabel="バトル結果を閉じる"
@@ -111,7 +146,7 @@ function ResultCardContent({ result, onClose }: { result: BattleResult; onClose:
             <IconSvg name="back" size={18} color={COLORS.text.primary} />
             <Text style={styles.buttonText}>{'閉じる'}</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </Animated.View>
     </View>
   );
@@ -157,4 +192,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', gap: 8,
   },
   buttonText: { color: COLORS.text.primary, fontSize: 16, fontWeight: '700' },
+  shareRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
+  shareBtn: { backgroundColor: COLORS.ui.accent, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, minHeight: 44, justifyContent: 'center' },
+  shareBtnText: { color: COLORS.text.primary, fontSize: 13, fontWeight: '700' },
+  xBtn: { backgroundColor: '#000', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, minHeight: 44, justifyContent: 'center' },
+  xBtnText: { color: '#FFF', fontSize: 13, fontWeight: '700' },
+  adBtn: { backgroundColor: '#FFB300', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 20, minHeight: 44, justifyContent: 'center' },
+  adBtnText: { color: '#1A1A2E', fontSize: 13, fontWeight: '700' },
 });

@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { PartDef, RARITY_COLOR } from '../types';
 import { COLORS } from '../constants/colors';
+import { IconSvg } from './IconSvg';
+
+const PART_TYPE_ICON = { head: 'head', body: 'body', legs: 'legs' } as const;
 
 interface Props {
   partDef: PartDef;
@@ -27,7 +30,11 @@ export const PartCard: React.FC<Props> = ({ partDef, onPress, onLongPress, selec
         selected && styles.selected,
       ]}
     >
-      <Text style={[styles.emoji, isSmall && styles.emojiSmall]}>{partDef.emoji}</Text>
+      <IconSvg
+        name={PART_TYPE_ICON[partDef.type] ?? 'dragon'}
+        size={isSmall ? 20 : 28}
+        color={RARITY_COLOR[partDef.rarity]}
+      />
       <Text style={[styles.name, isSmall && styles.nameSmall]} numberOfLines={1}>
         {partDef.name}
       </Text>

@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Alert, TextInput, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useGameStore } from '../src/store/gameStore';
 import { getPartDef } from '../src/data/parts';
 import { COLORS } from '../src/constants/colors';
@@ -168,22 +170,23 @@ export default function MainScreen() {
   const detailDef = showDetailModal ? getPartDef(showDetailModal.defId) : null;
 
   return (
+    <LinearGradient colors={['#0F0F1A', '#1A0A2E', '#2D1B4E']} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
+      <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
         <Text style={styles.headerItem}>コイン:{store.coins}</Text>
         <Text style={styles.headerItem}>Rank{store.arenaRank}</Text>
         <Text style={styles.headerItem}>{store.record.wins}W</Text>
-      </View>
+      </Animated.View>
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollInner}>
         {/* Chimera Preview */}
-        <TouchableOpacity style={styles.previewSection} onPress={() => setShowRenameModal(true)}>
+        <Pressable style={styles.previewSection} onPress={() => setShowRenameModal(true)}>
           <ChimeraPreview headDef={headDef ?? null} bodyDef={bodyDef ?? null} legsDef={legsDef ?? null} size="medium" />
           <Text style={styles.chimeraName}>{store.chimera.name}</Text>
           <StatsBar stats={store.chimera.totalStats} compact />
           <Text style={styles.power}>Power: {store.chimera.power}</Text>
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Equipment Slots */}
         <View style={styles.slotsRow}>
@@ -197,9 +200,9 @@ export default function MainScreen() {
             <Text style={styles.equipHintText}>
               {'\u88C5\u5099\u3059\u308B\u90E8\u4F4D\u3092\u30BF\u30C3\u30D7\u3057\u3066\u304F\u3060\u3055\u3044'}
             </Text>
-            <TouchableOpacity onPress={() => setShowEquipModal(null)}>
+            <Pressable onPress={() => setShowEquipModal(null)}>
               <Text style={styles.cancelText}>{'\u30AD\u30E3\u30F3\u30BB\u30EB'}</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
 
@@ -226,22 +229,22 @@ export default function MainScreen() {
 
       {/* Bottom Navigation */}
       <View style={styles.nav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/arena')} accessibilityRole="button" accessibilityLabel="闘技場へ移動">
+        <Pressable style={({ pressed }) => [styles.navButton, pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }]} onPress={() => router.push('/arena')} accessibilityRole="button" accessibilityLabel="闘技場へ移動">
           <Text style={styles.navIcon}>{'\u6226'}</Text>
           <Text style={styles.navLabel}>{'\u95D8\u6280\u5834'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/codex')} accessibilityRole="button" accessibilityLabel="図鑑へ移動">
+        </Pressable>
+        <Pressable style={({ pressed }) => [styles.navButton, pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }]} onPress={() => router.push('/codex')} accessibilityRole="button" accessibilityLabel="図鑑へ移動">
           <Text style={styles.navIcon}>{'\u56F3'}</Text>
           <Text style={styles.navLabel}>{'\u56F3\u9451'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/shop')} accessibilityRole="button" accessibilityLabel="ショップへ移動">
+        </Pressable>
+        <Pressable style={({ pressed }) => [styles.navButton, pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }]} onPress={() => router.push('/shop')} accessibilityRole="button" accessibilityLabel="ショップへ移動">
           <Text style={styles.navIcon}>{'\u5E97'}</Text>
           <Text style={styles.navLabel}>{'\u30B7\u30E7\u30C3\u30D7'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push('/legal')} accessibilityRole="button" accessibilityLabel="特定商取引法に基づく表記">
+        </Pressable>
+        <Pressable style={({ pressed }) => [styles.navButton, pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }]} onPress={() => router.push('/legal')} accessibilityRole="button" accessibilityLabel="特定商取引法に基づく表記">
           <Text style={styles.navIcon}>{'\u6CD5'}</Text>
           <Text style={styles.navLabel}>{'\u6CD5\u7684\u60C5\u5831'}</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Rename Modal */}
@@ -257,12 +260,12 @@ export default function MainScreen() {
               placeholderTextColor={COLORS.text.muted}
             />
             <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={() => setShowRenameModal(false)}>
+              <Pressable onPress={() => setShowRenameModal(false)}>
                 <Text style={styles.cancelText}>{'\u30AD\u30E3\u30F3\u30BB\u30EB'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmButton} onPress={handleRename}>
+              </Pressable>
+              <Pressable style={styles.confirmButton} onPress={handleRename}>
                 <Text style={styles.confirmButtonText}>{'\u6C7A\u5B9A'}</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -279,12 +282,12 @@ export default function MainScreen() {
                 <StatsBar stats={detailDef.stats} />
                 <Text style={styles.detailDesc}>{detailDef.description}</Text>
                 <View style={styles.modalButtons}>
-                  <TouchableOpacity onPress={() => handleSellPart(showDetailModal)}>
+                  <Pressable onPress={() => handleSellPart(showDetailModal)}>
                     <Text style={[styles.cancelText, { color: COLORS.ui.error }]}>{'\u58F2\u5374'}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setShowDetailModal(null)}>
+                  </Pressable>
+                  <Pressable onPress={() => setShowDetailModal(null)}>
                     <Text style={styles.cancelText}>{'\u9589\u3058\u308B'}</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </>
             )}
@@ -292,31 +295,32 @@ export default function MainScreen() {
         </View>
       </Modal>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.bg.primary },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 8,
-    backgroundColor: COLORS.bg.secondary, borderBottomWidth: 1, borderBottomColor: COLORS.ui.border,
+    backgroundColor: 'rgba(255,255,255,0.05)', borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.1)',
   },
-  headerItem: { color: COLORS.text.primary, fontSize: 14, fontWeight: '700' },
+  headerItem: { color: '#F1F5F9', fontSize: 14, fontWeight: '700' },
   scrollContent: { flex: 1 },
   scrollInner: { padding: 16, gap: 12, alignItems: 'center' },
   previewSection: { alignItems: 'center', marginBottom: 4 },
-  chimeraName: { color: COLORS.text.primary, fontSize: 18, fontWeight: '700', marginTop: 4 },
-  power: { color: COLORS.ui.warning, fontSize: 14, fontWeight: '700', marginTop: 4 },
+  chimeraName: { color: '#F1F5F9', fontSize: 18, fontWeight: '700', marginTop: 4, textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
+  power: { color: COLORS.ui.warning, fontSize: 14, fontWeight: '700', marginTop: 4, textShadowColor: '#FFC107', textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
   slotsRow: { flexDirection: 'row', justifyContent: 'center', gap: 12 },
-  equipHint: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 8, backgroundColor: COLORS.bg.surface, borderRadius: 8 },
+  equipHint: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 8, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
   equipHintText: { color: COLORS.ui.accentLight, fontSize: 12, flex: 1 },
   cancelText: { color: COLORS.text.muted, fontSize: 14, fontWeight: '600' },
   inventorySection: { borderTopWidth: 1, borderTopColor: COLORS.ui.border, paddingVertical: 8 },
   nav: {
     flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 8,
-    backgroundColor: COLORS.bg.secondary, borderTopWidth: 1, borderTopColor: COLORS.ui.border,
+    backgroundColor: 'rgba(255,255,255,0.05)', borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)',
   },
-  navButton: { alignItems: 'center', paddingHorizontal: 20 },
+  navButton: { alignItems: 'center', paddingHorizontal: 20, minHeight: 44, justifyContent: 'center' },
   navIcon: { fontSize: 24 },
   navLabel: { color: COLORS.text.secondary, fontSize: 10, marginTop: 2 },
   modalOverlay: {
@@ -324,10 +328,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center', padding: 32,
   },
   modalCard: {
-    backgroundColor: COLORS.bg.secondary, borderRadius: 20, padding: 24,
-    width: '100%', alignItems: 'center', gap: 12,
+    backgroundColor: 'rgba(26,10,46,0.95)', borderRadius: 20, padding: 24,
+    width: '100%', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
   },
-  modalTitle: { color: COLORS.text.primary, fontSize: 18, fontWeight: '700' },
+  modalTitle: { color: '#F1F5F9', fontSize: 18, fontWeight: '700', textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
   nameInput: {
     backgroundColor: COLORS.bg.surface, color: COLORS.text.primary,
     borderRadius: 8, padding: 12, width: '100%', fontSize: 16, textAlign: 'center',
@@ -335,6 +339,7 @@ const styles = StyleSheet.create({
   modalButtons: { flexDirection: 'row', gap: 24, marginTop: 8 },
   confirmButton: {
     backgroundColor: COLORS.ui.accent, paddingHorizontal: 24, paddingVertical: 8, borderRadius: 8,
+    shadowColor: '#7C4DFF', shadowOpacity: 0.5, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 4,
   },
   confirmButtonText: { color: COLORS.text.primary, fontSize: 14, fontWeight: '700' },
   detailEmoji: { fontSize: 48 },

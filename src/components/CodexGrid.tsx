@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { PartDef, PartSpecies, RARITY_COLOR, RARITY_LABEL } from '../types';
 import { PARTS_DATA } from '../data/parts';
 import { COLORS } from '../constants/colors';
+import { IconSvg } from './IconSvg';
+
+const PART_TYPE_ICON = { head: 'head', body: 'body', legs: 'legs' } as const;
 
 interface Props {
   discovered: string[];
@@ -60,9 +63,15 @@ export const CodexGrid: React.FC<Props> = ({ discovered, onSelectPart }) => {
                       onPress={() => isDiscovered && onSelectPart?.(part)}
                       activeOpacity={isDiscovered ? 0.7 : 1}
                     >
-                      <Text style={[styles.cellEmoji, !isDiscovered && styles.undiscovered]}>
-                        {isDiscovered ? part.emoji : '\u2753'}
-                      </Text>
+                      {isDiscovered ? (
+                        <IconSvg
+                          name={PART_TYPE_ICON[part.type] ?? 'dragon'}
+                          size={24}
+                          color={RARITY_COLOR[part.rarity]}
+                        />
+                      ) : (
+                        <Text style={[styles.cellEmoji, styles.undiscovered]}>?</Text>
+                      )}
                       <Text style={[styles.cellRarity, { color: RARITY_COLOR[part.rarity] }]}>
                         {part.rarity[0].toUpperCase()}
                       </Text>

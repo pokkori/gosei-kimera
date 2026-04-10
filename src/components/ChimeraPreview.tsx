@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PartDef, Rarity, RARITY_COLOR } from '../types';
 import { COLORS } from '../constants/colors';
+import { IconSvg } from './IconSvg';
 
 interface Props {
   headDef: PartDef | null;
@@ -18,10 +19,12 @@ interface Props {
 }
 
 const SIZES = {
-  small: { width: 80, height: 106, emoji: 24 },
-  medium: { width: 160, height: 213, emoji: 40 },
-  large: { width: 240, height: 320, emoji: 56 },
+  small: { width: 80, height: 106, iconSize: 24 },
+  medium: { width: 160, height: 213, iconSize: 40 },
+  large: { width: 240, height: 320, iconSize: 56 },
 };
+
+const PART_TYPE_ICON = { head: 'head', body: 'body', legs: 'legs' } as const;
 
 function getHighestRarity(...defs: (PartDef | null)[]): Rarity {
   const rarityOrder: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
@@ -63,23 +66,23 @@ export const ChimeraPreview: React.FC<Props> = ({ headDef, bodyDef, legsDef, siz
       <View style={styles.partsColumn}>
         <View style={styles.partSection}>
           {headDef ? (
-            <Text style={{ fontSize: dim.emoji }}>{headDef.emoji}</Text>
+            <IconSvg name="head" size={dim.iconSize} color={RARITY_COLOR[headDef.rarity]} />
           ) : (
-            <Text style={[styles.placeholder, { fontSize: dim.emoji * 0.6 }]}>?</Text>
+            <Text style={[styles.placeholder, { fontSize: dim.iconSize * 0.6 }]}>?</Text>
           )}
         </View>
         <View style={styles.partSection}>
           {bodyDef ? (
-            <Text style={{ fontSize: dim.emoji }}>{bodyDef.emoji}</Text>
+            <IconSvg name="body" size={dim.iconSize} color={RARITY_COLOR[bodyDef.rarity]} />
           ) : (
-            <Text style={[styles.placeholder, { fontSize: dim.emoji * 0.6 }]}>?</Text>
+            <Text style={[styles.placeholder, { fontSize: dim.iconSize * 0.6 }]}>?</Text>
           )}
         </View>
         <View style={styles.partSection}>
           {legsDef ? (
-            <Text style={{ fontSize: dim.emoji }}>{legsDef.emoji}</Text>
+            <IconSvg name="legs" size={dim.iconSize} color={RARITY_COLOR[legsDef.rarity]} />
           ) : (
-            <Text style={[styles.placeholder, { fontSize: dim.emoji * 0.6 }]}>?</Text>
+            <Text style={[styles.placeholder, { fontSize: dim.iconSize * 0.6 }]}>?</Text>
           )}
         </View>
       </View>

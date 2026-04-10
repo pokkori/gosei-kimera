@@ -1,24 +1,26 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function LegalScreen() {
   const router = useRouter();
   return (
+    <LinearGradient colors={['#0F0F1A', '#1A0A2E', '#2D1B4E']} style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scroll}
         accessibilityLabel="特定商取引法に基づく表記"
       >
-        <TouchableOpacity
+        <Pressable
           onPress={() => router.back()}
           style={styles.back}
           accessibilityRole="button"
           accessibilityLabel="戻る"
         >
           <Text style={styles.backText}>← 戻る</Text>
-        </TouchableOpacity>
+        </Pressable>
         <Text style={styles.title} accessibilityRole="header">
           特定商取引法に基づく表記
         </Text>
@@ -27,7 +29,7 @@ export default function LegalScreen() {
             ['販売事業者', 'アプリ開発者'],
             ['所在地', '請求があれば開示します'],
             ['電話番号', '請求があれば開示します'],
-            ['メールアドレス', 'support@example.com'],
+            ['メールアドレス', 'support@chimera-forge.app'],
             ['価格', 'アプリ内課金あり（表示価格通り）'],
             ['支払時期', 'ご購入時'],
             ['支払方法', 'App Store / Google Play 決済'],
@@ -43,20 +45,23 @@ export default function LegalScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0D0D1A' },
+  container: { flex: 1 },
   scroll: { flex: 1, padding: 16 },
   back: { marginBottom: 16, minHeight: 44, justifyContent: 'center' },
   backText: { color: '#2DD4BF', fontSize: 16 },
-  title: { color: '#FFFFFF', fontSize: 20, fontWeight: 'bold', marginBottom: 24 },
+  title: { color: '#F1F5F9', fontSize: 20, fontWeight: 'bold', marginBottom: 24, textShadowColor: '#7C4DFF', textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
   table: { gap: 12 },
   row: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 16,
     padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
   },
   label: { color: '#9CA3AF', fontSize: 12, marginBottom: 4 },
   value: { color: '#FFFFFF', fontSize: 14 },
